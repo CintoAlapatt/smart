@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -27,10 +28,12 @@ public class AppointmentService {
         this.agentRepository=agentRepository;
     }
 
-    public List<Appointment> getRequests(){
+    public List<Appointment> getAllAppointments(){
         return appointmentRepository.findAll();
     }
-
+    public List<Appointment> getAllAppointmentsByMonth(Integer month,Integer year){
+        return appointmentRepository.getAllAppointmentsByMonth(month,year);
+    }
     public void addNewAppointment(Appointment appointment) {
         Services services = servicesRepository.findById(appointment.getServices().getId())
                 .orElseThrow(() -> new IllegalArgumentException("No service with the provided ID exists"));

@@ -17,9 +17,16 @@ public class AppointmentController {
         this.appointmentService = appointmentService;
     }
     @GetMapping
-    public List<Appointment> getRequests() {
-        return appointmentService.getRequests();
+    public List<Appointment> getAllAppointments() {
+        return appointmentService.getAllAppointments();
     }
+    @GetMapping("/byMonthAndYear")
+    public List<Appointment> getAllAppointmentsByMonth(@RequestParam Integer month,@RequestParam(required = false) Integer year) {
+        return appointmentService.getAllAppointmentsByMonth(month,year);
+    }
+
+
+
     @PostMapping
     public void registerNewAppointment(@RequestBody Appointment appointment){
         appointmentService.addNewAppointment(appointment);

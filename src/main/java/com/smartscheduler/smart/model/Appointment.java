@@ -20,31 +20,7 @@ public class Appointment {
     private int id;
     private String status;
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     private String serviceLocation;
-
-    public String getServiceLocation() {
-        return serviceLocation;
-    }
-
-    public void setServiceLocation(String serviceLocation) {
-        this.serviceLocation = serviceLocation;
-    }
-
-    public String getServiceDescription() {
-        return serviceDescription;
-    }
-
-    public void setServiceDescription(String serviceDescription) {
-        this.serviceDescription = serviceDescription;
-    }
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "service_id")
@@ -144,5 +120,31 @@ public class Appointment {
 
     public void setEstimateMin(Integer estimateMin) {
         this.estimateMin = estimateMin;
+    }
+
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+    public String getServiceLocation() {
+        return serviceLocation;
+    }
+
+    public void setServiceLocation(String serviceLocation) {
+        this.serviceLocation = serviceLocation;
+    }
+
+    public String getServiceDescription() {
+        return serviceDescription;
+    }
+
+    public void setServiceDescription(String serviceDescription) {
+        this.serviceDescription = serviceDescription;
     }
 }

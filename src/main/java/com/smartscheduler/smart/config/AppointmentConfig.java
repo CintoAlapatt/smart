@@ -16,7 +16,7 @@ public class AppointmentConfig {
     CommandLineRunner commandLineRunner(AppointmentRepository repository){
      return args -> {
          Appointment appoint4= new Appointment("pending","boston",null," ",null,null,LocalDateTime.of(2020, Month.AUGUST,2,2,2,2),2,2);
-         Appointment appoint3= new Appointment("pending","chicago",new Services(10, "dsd")," ",null,null,LocalDateTime.of(2020, Month.AUGUST,2,2,2,2),2,2);
+         Appointment appoint3= new Appointment("pending","chicago",null," ",null,null,LocalDateTime.of(2020, Month.AUGUST,2,2,2,2),2,2);
          repository.saveAll(List.of(appoint4,appoint3));
      };
     }
