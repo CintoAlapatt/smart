@@ -18,6 +18,9 @@ public class Contact {
 
     }
 
+    public Contact(int i) {
+    }
+
 
     public String getPhoneNumber() {
         return phoneNumber;

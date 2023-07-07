@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,19 @@ public class AppointmentService {
     }
     public List<Appointment> getAllAppointmentsByMonth(Integer month,Integer year){
         return appointmentRepository.getAllAppointmentsByMonth(month,year);
+    }
+    public List<Appointment> getAllAppointmentsByAgentAndDate(Integer agentId, Integer day, Integer month, Integer year) {
+        if(day==null){
+            day= LocalDate.now().getDayOfMonth();
+        }
+        if(month==null){
+            month=LocalDate.now().getMonthValue();
+        }
+        if(year==null){
+            year=LocalDate.now().getYear();
+        }
+
+        return appointmentRepository.getAllAppointmentsByAgentAndDate(agentId,day,month,year);
     }
     public void addNewAppointment(Appointment appointment) {
         Services services = servicesRepository.findById(appointment.getServices().getId())
@@ -71,4 +85,6 @@ public class AppointmentService {
 
         appointmentRepository.deleteAll();
     }
+
+
 }
