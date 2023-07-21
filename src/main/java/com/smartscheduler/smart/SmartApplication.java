@@ -1,6 +1,10 @@
 package com.smartscheduler.smart;
 
+import ch.qos.logback.core.spi.AbstractComponentTracker;
 import com.smartscheduler.smart.model.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.antlr.v4.runtime.misc.LogManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,27 +15,23 @@ import java.time.LocalDateTime;
 @SpringBootApplication
 @RestController
 public class SmartApplication {
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SmartApplication.class, args);
 	}
 
 	@GetMapping("/hello")
-	public Services hello(){
+	public Schedule	 hello(){
 		Services services = new Services(3,"hh");
-		Schedule schedule = new Schedule(1, LocalDateTime.of(2023, 7, 1, 9, 0), LocalDateTime.of(2023, 7, 1, 17, 0));
-		Agent agent= new Agent(2,"antony","d",null,null,null,null);
-		Appointment appointment = new Appointment("pending","new york",services,"lawn",new Agent(
-				1,
-				"John",
-				"Doe",
-				new Contact(  "1234567890"), // Contact object
-				new Login( "johndoe", "password"), // Login object
-				new Schedule(1, LocalDateTime.of(2023, 7, 1, 9, 0), LocalDateTime.of(2023, 7, 1, 17, 0)), // workSchedule
-				new Schedule(2, LocalDateTime.of(2023, 7, 1, 11, 0), LocalDateTime.of(2023, 7, 1, 13, 0)) // bookedSchedule
-		),null,LocalDateTime.of(14, 10, 15,0,0,0),2,2);
 
-		return services;
+		Agent agent = entityManager.find(Agent.class, 1);
+		ScheduleUnit schedule = new ScheduleUnit( LocalDateTime.of(2023, 7, 1, 9, 0), LocalDateTime.of(2023, 7, 1, 17, 0));
+		Schedule schedule1=new Schedule(LocalDateTime.of(2023,7,10,9,0),schedule,null,null,null);
+		Appointment appointment = new Appointment(Status.PENDING,null,services,"lawn",null,null,LocalDateTime.of(14, 10, 15,0,0,0),2,2);
+
+		return schedule1;
 	}
 
 	@GetMapping("/greet")

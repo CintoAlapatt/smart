@@ -18,11 +18,15 @@ public class Appointment {
             generator = "appointment_sequence"
     )
     private int id;
-    private String status;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
-    private String serviceLocation;
+    @ManyToOne
+    @JoinColumn(name="address_id")
+    private Address serviceLocation;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "service_id")
     private Services services;
 
@@ -48,7 +52,8 @@ public class Appointment {
         this.services = services;
     }
 
-    public Appointment(String status, String serviceLocation, Services services, String serviceDescription, Agent agent, Customer customer, LocalDateTime dateTime, Integer estimateHrs, Integer estimateMin) {
+    public Appointment(Status status, Address serviceLocation, Services services, String serviceDescription, Agent agent, Customer customer, LocalDateTime dateTime, Integer estimateHrs, Integer estimateMin) {
+        this.status=status;
         this.serviceLocation=serviceLocation;
         this.services = services;
         this.serviceDescription=serviceDescription;
@@ -122,21 +127,21 @@ public class Appointment {
         this.estimateMin = estimateMin;
     }
 
-
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
 
-    public String getServiceLocation() {
+
+    public Address getServiceLocation() {
         return serviceLocation;
     }
 
-    public void setServiceLocation(String serviceLocation) {
+    public void setServiceLocation(Address serviceLocation) {
         this.serviceLocation = serviceLocation;
     }
 

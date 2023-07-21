@@ -1,41 +1,94 @@
 package com.smartscheduler.smart.model;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
 @Entity
 @Table
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
-    public LocalDateTime startDateTime;
-    public LocalDateTime endDateTime;
+    private int id;
+    private LocalDateTime date;
 
-    public Schedule(int id, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        this.id = id;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
-    }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "work_schedule_id", referencedColumnName = "id")
+    private ScheduleUnit workSchedule;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "available_schedule_id", referencedColumnName = "id")
+    private ScheduleUnit availableSchedule;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "booked_schedule_id", referencedColumnName = "id")
+    private ScheduleUnit bookedSchedule;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="agent_id")
+    @JsonIgnoreProperties({"schedules"})
+    private Agent agent;
 
     public Schedule() {
-
     }
 
-    public LocalDateTime getStartDateTime() {
-        return startDateTime;
+    public Schedule(LocalDateTime date, ScheduleUnit workSchedule, ScheduleUnit availableSchedule, ScheduleUnit bookedSchedule, Agent agent) {
+        this.date = date;
+        this.workSchedule = workSchedule;
+        this.availableSchedule = availableSchedule;
+        this.bookedSchedule = bookedSchedule;
+        this.agent = agent;
     }
 
-    public void setStartDateTime(LocalDateTime startDateTime) {
-        this.startDateTime = startDateTime;
+    // Getters and Setters
+
+    public Integer getId() {
+        return id;
     }
 
-    public LocalDateTime getEndDateTime() {
-        return endDateTime;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setEndDateTime(LocalDateTime endDateTime) {
-        this.endDateTime = endDateTime;
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public ScheduleUnit getWorkSchedule() {
+        return workSchedule;
+    }
+
+    public void setWorkSchedule(ScheduleUnit workSchedule) {
+        this.workSchedule = workSchedule;
+    }
+
+    public ScheduleUnit getAvailableSchedule() {
+        return availableSchedule;
+    }
+
+    public void setAvailableSchedule(ScheduleUnit availableSchedule) {
+        this.availableSchedule = availableSchedule;
+    }
+
+    public ScheduleUnit getBookedSchedule() {
+        return bookedSchedule;
+    }
+
+    public void setBookedSchedule(ScheduleUnit bookedSchedule) {
+        this.bookedSchedule = bookedSchedule;
+    }
+
+    public Agent getAgent() {
+        return agent;
+    }
+
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 }

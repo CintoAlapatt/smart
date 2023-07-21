@@ -16,15 +16,15 @@ public class AppointmentController {
     public AppointmentController(AppointmentService appointmentService){
         this.appointmentService = appointmentService;
     }
-    @GetMapping
-    public List<Appointment> getAllAppointments() {
-        return appointmentService.getAllAppointments();
-    }
-    @GetMapping("/byMonthAndYear")
+//    @GetMapping
+//    public List<Appointment> getAllAppointments() {
+//        return appointmentService.getAllAppointments();
+//    }
+    @GetMapping()
     public List<Appointment> getAllAppointmentsByMonth(@RequestParam Integer month,@RequestParam(required = false) Integer year) {
         return appointmentService.getAllAppointmentsByMonth(month,year);
     }
-    @GetMapping("/byAgentAndDate")
+    @GetMapping("/agent")
     public List<Appointment> getAllAppointmentsByAgentAndDate(@RequestParam Integer agentId,@RequestParam (required = false)Integer day,@RequestParam(required = false) Integer month,@RequestParam(required = false) Integer year) {
         return appointmentService.getAllAppointmentsByAgentAndDate(agentId,day,month,year);
     }

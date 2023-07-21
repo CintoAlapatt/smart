@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
-    @Autowired
-    private final AppointmentRepository appointmentRepository;
-    @Autowired
-    private final ServicesRepository servicesRepository;
-    @Autowired
-    private final AgentRepository agentRepository;
 
+    private final AppointmentRepository appointmentRepository;
+
+    private final ServicesRepository servicesRepository;
+
+    private final AgentRepository agentRepository;
+    @Autowired
     public AppointmentService(AppointmentRepository appointmentRepository, ServicesRepository servicesRepository, AgentRepository agentRepository) {
         this.appointmentRepository = appointmentRepository;
         this.servicesRepository = servicesRepository;

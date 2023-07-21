@@ -1,72 +1,38 @@
 package com.smartscheduler.smart.model;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-
-@DiscriminatorValue("agent")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Agent extends Person {
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "work_schedule_id", referencedColumnName = "id")
-    private Schedule workSchedule;
+    @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true)
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "available_schedule_id", referencedColumnName = "id")
-    private Schedule availableSchedule;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "booked_schedule_id", referencedColumnName = "id")
-    private Schedule bookedSchedule;
+    private List<Schedule> schedules = new ArrayList<>();
 
     public Agent(){
-
     }
 
-    public Agent(int id, String firstname, String lastname, Contact contact, Login login, Schedule workSchedule, Schedule bookedSchedule) {
-        super(id, firstname, lastname, contact, login);
-        this.setWorkSchedule(workSchedule);
-        this.setBookedSchedule(bookedSchedule);
-    }
-    public Schedule getWorkSchedule() {
-        return workSchedule;
+    public Agent(String firstname, String lastname, Contact contact, Login login) {
+        super( firstname, lastname, contact, login);
     }
 
-    public void setWorkSchedule(Schedule workSchedule) {
-        this.workSchedule = workSchedule;
-        calculateAvailableSchedule();
+//    getter and setter for schedules
+    public List<Schedule> getSchedules() {
+        return schedules;
     }
 
-    public Schedule getAvailableSchedule() {
-        return availableSchedule;
-    }
-
-    public void setAvailableSchedule(Schedule availableSchedule) {
-        this.availableSchedule = availableSchedule;
-    }
-
-    public Schedule getBookedSchedule() {
-        return bookedSchedule;
-    }
-
-    public void setBookedSchedule(Schedule bookedSchedule) {
-        this.bookedSchedule = bookedSchedule;
-        calculateAvailableSchedule();
-    }
-    public void calculateAvailableSchedule() {
-        if (workSchedule == null || bookedSchedule == null) {
-            return;
+    public void setSchedules(List<Schedule> schedules) {
+        this.schedules = schedules;
+        for (Schedule schedule : schedules) {
+            schedule.setAgent(this);
         }
-
-        if (workSchedule.getStartDateTime().isAfter(bookedSchedule.getStartDateTime())
-                || workSchedule.getEndDateTime().isBefore(bookedSchedule.getEndDateTime())) {
-            throw new IllegalStateException("Booked schedule not within work schedule");
-        }
-
-        Schedule availableSchedule = new Schedule();
-        availableSchedule.setStartDateTime(bookedSchedule.getEndDateTime());
-        availableSchedule.setEndDateTime(workSchedule.getEndDateTime());
-
-        this.availableSchedule = availableSchedule;
     }
 }
+

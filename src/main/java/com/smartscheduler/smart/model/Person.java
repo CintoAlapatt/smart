@@ -1,13 +1,9 @@
 package com.smartscheduler.smart.model;
 
 import jakarta.persistence.*;
-import org.hibernate.service.spi.InjectService;
-@Entity
-@Table(name="person")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "person_type", discriminatorType = DiscriminatorType.STRING)
 
-public class Person {
+@MappedSuperclass
+public abstract class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +20,7 @@ public class Person {
     private Login login;
 
 
-    public Person(int id, String firstname, String lastname, Contact contact, Login login) {
-        this.id = id;
+    public Person( String firstname, String lastname, Contact contact, Login login) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.contact = contact;
