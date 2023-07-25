@@ -25,7 +25,7 @@ public class AppointmentController {
         return appointmentService.getAllAppointmentsByMonth(month,year);
     }
     @GetMapping("/agent")
-    public List<Appointment> getAllAppointmentsByAgentAndDate(@RequestParam Integer agentId,@RequestParam (required = false)Integer day,@RequestParam(required = false) Integer month,@RequestParam(required = false) Integer year) {
+    public String getAllAppointmentsByAgentAndDate(@RequestParam Integer agentId,@RequestParam (required = false)Integer day,@RequestParam(required = false) Integer month,@RequestParam(required = false) Integer year) {
         return appointmentService.getAllAppointmentsByAgentAndDate(agentId,day,month,year);
     }
 

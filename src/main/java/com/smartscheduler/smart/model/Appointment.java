@@ -22,8 +22,9 @@ public class Appointment {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @ManyToOne
-    @JoinColumn(name="address_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="service_location_id")
+
     private Address serviceLocation;
 
     @ManyToOne

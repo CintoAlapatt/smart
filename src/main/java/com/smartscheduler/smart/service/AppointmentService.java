@@ -1,5 +1,8 @@
 package com.smartscheduler.smart.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smartscheduler.smart.model.Address;
 import com.smartscheduler.smart.model.Agent;
 import com.smartscheduler.smart.model.Appointment;
 import com.smartscheduler.smart.model.Services;
@@ -11,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,19 +38,56 @@ public class AppointmentService {
     public List<Appointment> getAllAppointmentsByMonth(Integer month,Integer year){
         return appointmentRepository.getAllAppointmentsByMonth(month,year);
     }
-    public List<Appointment> getAllAppointmentsByAgentAndDate(Integer agentId, Integer day, Integer month, Integer year) {
-        if(day==null){
-            day= LocalDate.now().getDayOfMonth();
+    public String getAllAppointmentsByAgentAndDate(Integer agentId, Integer day, Integer month, Integer year) {
+        if(day == null){
+            day = LocalDate.now().getDayOfMonth();
         }
-        if(month==null){
-            month=LocalDate.now().getMonthValue();
+        if(month == null){
+            month = LocalDate.now().getMonthValue();
         }
-        if(year==null){
-            year=LocalDate.now().getYear();
+        if(year == null){
+            year = LocalDate.now().getYear();
         }
 
-        return appointmentRepository.getAllAppointmentsByAgentAndDate(agentId,day,month,year);
+        Optional<Agent> agentOpt = agentRepository.findById(agentId);
+
+        if (!agentOpt.isPresent()) {
+            throw new NoSuchElementException("No agent found with the provided id");
+        }
+
+        Agent agent = agentOpt.get();
+        List<Appointment> appointments = appointmentRepository.getAllAppointmentsByAgentAndDate(agentId,day,month,year);
+
+        // Create a list of address keys and their addresses
+        List<Address> addresses = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+            // Check if service location is null
+            if(appointment.getServiceLocation() == null){
+                continue; // Skip this iteration
+            }
+            addresses.add(appointment.getServiceLocation());
+        }
+
+        // Prepare response object
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("startAddress", agent.getStartAddress());
+        response.put("Addresses", addresses);
+
+
+
+        // Convert map to JSON
+        ObjectMapper mapper = new ObjectMapper();
+        String json = "";
+        try {
+            json = mapper.writeValueAsString(response);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return json;
     }
+
+
     public void addNewAppointment(Appointment appointment) {
         Services services = servicesRepository.findById(appointment.getServices().getId())
                 .orElseThrow(() -> new IllegalArgumentException("No service with the provided ID exists"));

@@ -11,6 +11,11 @@ public class Address {
     public String addressLine1;
     public String addressLine2;
     public String city;
+
+    public Long getId() {
+        return id;
+    }
+
     public String state;
     public int zipcode;
 

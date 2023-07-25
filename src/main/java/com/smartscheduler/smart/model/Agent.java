@@ -11,16 +11,27 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Agent extends Person {
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="start_address_id")
+    private Address startAddress;
     @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true)
 
     private List<Schedule> schedules = new ArrayList<>();
 
+    public Address getStartAddress() {
+        return startAddress;
+    }
+
+    public void setStartAddress(Address startAddress) {
+        this.startAddress = startAddress;
+    }
+
     public Agent(){
     }
 
-    public Agent(String firstname, String lastname, Contact contact, Login login) {
+    public Agent(String firstname, String lastname, Contact contact, Login login,Address startAddress) {
         super( firstname, lastname, contact, login);
+        this.startAddress=startAddress;
     }
 
 //    getter and setter for schedules
