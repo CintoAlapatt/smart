@@ -2,10 +2,7 @@ package com.smartscheduler.smart.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smartscheduler.smart.model.Address;
-import com.smartscheduler.smart.model.Agent;
-import com.smartscheduler.smart.model.Appointment;
-import com.smartscheduler.smart.model.Services;
+import com.smartscheduler.smart.model.*;
 import com.smartscheduler.smart.repository.AgentRepository;
 import com.smartscheduler.smart.repository.AppointmentRepository;
 import com.smartscheduler.smart.repository.ServicesRepository;
@@ -14,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,11 +31,16 @@ public class AppointmentService {
         this.agentRepository=agentRepository;
     }
 
+
     public List<Appointment> getAllAppointments(){
         return appointmentRepository.findAll();
     }
     public List<Appointment> getAllAppointmentsByMonth(Integer month,Integer year){
         return appointmentRepository.getAllAppointmentsByMonth(month,year);
+    }
+    public Appointment findAppointmentById(long id) {
+        return appointmentRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("No appointment found for the given id: " + id));
     }
     public String getAllAppointmentsByAgentAndDate(Integer agentId, Integer day, Integer month, Integer year) {
         if(day == null){
@@ -71,7 +75,7 @@ public class AppointmentService {
         // Prepare response object
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("startAddress", agent.getStartAddress());
-        response.put("Addresses", addresses);
+        response.put("addresses", addresses);
 
 
 
@@ -85,6 +89,14 @@ public class AppointmentService {
         }
 
         return json;
+    }
+    public Long getAppointmentIdByAddressId(Long addressId) {
+        Optional<Appointment> appointmentOpt = appointmentRepository.findAppointmentByAddressId(Math.toIntExact(addressId));
+        if (appointmentOpt.isPresent()) {
+            return (long) appointmentOpt.get().getId();
+        } else {
+            throw new NoSuchElementException("No appointment found for the given address id: " + addressId);
+        }
     }
 
 
@@ -106,10 +118,13 @@ public class AppointmentService {
         if(!exists){
             throw new IllegalStateException("ID DOES NOT EXISTS");
         }
+        
+        
+
         appointmentRepository.deleteById(appointmentId);
     }
     @Transactional
-    public void updateAppointment(int appointmentId, Integer estimateHrs, Integer estimateMin) {
+    public void updateAppointment(int appointmentId, Integer estimateHrs, Integer estimateMin,LocalDate appointmentDate,  LocalTime appointmentTime, Status status) {
         Appointment appointment=appointmentRepository.findById(appointmentId).orElseThrow(()->new IllegalStateException("appointment ID"+appointmentId+"does not exists"));
 
         if(estimateHrs!= null && !estimateHrs.equals(appointment.getEstimateHrs())){
@@ -118,13 +133,23 @@ public class AppointmentService {
         if(estimateMin!= null && !estimateMin.equals(appointment.getEstimateMin())){
             appointment.setEstimateMin(estimateMin);
         }
-
+        if(appointmentDate!= null && !appointmentDate.equals(appointment.getAppointmentDate())){
+            appointment.setAppointmentDate(appointmentDate);;
+        }
+        if(appointmentTime!= null && !appointmentTime.equals(appointment.getAppointmentTime())){
+            appointment.setAppointmentTime(appointmentTime);;
+        }
+        if(status!=null ){
+            appointment.setStatus(status);
+        }
+        appointmentRepository.save(appointment);
     }
+
 
     public void deleteAllAppointment() {
-
         appointmentRepository.deleteAll();
     }
+
 
 
 }

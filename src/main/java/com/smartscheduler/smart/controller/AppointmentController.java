@@ -1,10 +1,14 @@
 package com.smartscheduler.smart.controller;
 
 import com.smartscheduler.smart.model.Appointment;
+import com.smartscheduler.smart.model.Status;
 import com.smartscheduler.smart.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -30,6 +34,7 @@ public class AppointmentController {
     }
 
 
+
     @PostMapping
     public void registerNewAppointment(@RequestBody Appointment appointment){
         appointmentService.addNewAppointment(appointment);
@@ -46,8 +51,8 @@ public class AppointmentController {
 
     }
     @PutMapping(path ="{appointmentId}")
-    public void updateAppointment(@PathVariable("appointmentId")int appointmentId,@RequestParam(required = false) Integer estimateHrs,@RequestParam (required = false) Integer estimateMin){
-        appointmentService.updateAppointment(appointmentId,estimateHrs,estimateMin);
+    public void updateAppointment(@PathVariable("appointmentId")int appointmentId, @RequestParam(required = false) Integer estimateHrs, @RequestParam (required = false) Integer estimateMin, @RequestParam (required = false) LocalDate appointmentDate, @RequestParam (required = false) LocalTime appointmentTime, @RequestParam (required = false) Status status){
+        appointmentService.updateAppointment(appointmentId,estimateHrs,estimateMin,appointmentDate,appointmentTime,status);
     }
 
 

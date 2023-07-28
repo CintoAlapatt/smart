@@ -2,8 +2,11 @@ package com.smartscheduler.smart.model;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import org.hibernate.type.descriptor.java.LocalDateTimeJavaType;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table
@@ -12,7 +15,7 @@ public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private LocalDateTime date;
+    private LocalDate date;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "work_schedule_id", referencedColumnName = "id")
@@ -34,7 +37,7 @@ public class Schedule {
     public Schedule() {
     }
 
-    public Schedule(LocalDateTime date, ScheduleUnit workSchedule, ScheduleUnit availableSchedule, ScheduleUnit bookedSchedule, Agent agent) {
+    public Schedule(LocalDate date, ScheduleUnit workSchedule, ScheduleUnit availableSchedule, ScheduleUnit bookedSchedule, Agent agent) {
         this.date = date;
         this.workSchedule = workSchedule;
         this.availableSchedule = availableSchedule;
@@ -52,11 +55,11 @@ public class Schedule {
         this.id = id;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

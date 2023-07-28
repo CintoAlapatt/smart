@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table
@@ -16,33 +17,33 @@ public class ScheduleUnit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int id;
-    @Column(name = "start_date_time")
-    public LocalDateTime startDateTime;
-    @Column(name = "end_date_time")
-    public LocalDateTime endDateTime;
+    @Column(name = "start_time")
+    public LocalTime startTime;
+    @Column(name = "end_time")
+    public LocalTime endTime;
 
-    public ScheduleUnit( LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
+    public ScheduleUnit(LocalTime startTime, LocalTime endTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public ScheduleUnit() {
 
     }
 
-    public LocalDateTime getStartDateTime() {
-        return startDateTime;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public void setStartDateTime(LocalDateTime startDateTime) {
-        this.startDateTime = startDateTime;
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
-    public LocalDateTime getEndDateTime() {
-        return endDateTime;
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
-    public void setEndDateTime(LocalDateTime endDateTime) {
-        this.endDateTime = endDateTime;
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 }

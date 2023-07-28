@@ -12,7 +12,9 @@ import org.springframework.context.annotation.Configuration;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +38,7 @@ public class AppointmentConfig {
 
                 Customer customer = new Customer("ff", "dd", null, null, "dd");
 
-                Appointment appoint4 = new Appointment(Status.PENDING, new Address("ss", "ss", "ss", "ss", 12), null, " ", agent2, null, LocalDateTime.of(2020, Month.AUGUST, 2, 2, 2, 2), 2, 2);
+                Appointment appoint4 = new Appointment(Status.PENDING, new Address("ss", "ss", "ss", "ss", 12), null, " ", agent2, null, LocalDate.of(2023, 10, 15), LocalTime.of(14, 10), 2, 2);
                 repository.saveAll(List.of(appoint4));
             } catch (IllegalArgumentException e) {
                 // Log the exception and handle it gracefully

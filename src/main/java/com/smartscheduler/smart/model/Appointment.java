@@ -2,7 +2,9 @@ package com.smartscheduler.smart.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table
@@ -38,7 +40,8 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-    private LocalDateTime dateTime;
+    private LocalDate appointmentDate;
+    private LocalTime appointmentTime;
     private Integer estimateHrs;
     private Integer estimateMin;
 
@@ -53,14 +56,15 @@ public class Appointment {
         this.services = services;
     }
 
-    public Appointment(Status status, Address serviceLocation, Services services, String serviceDescription, Agent agent, Customer customer, LocalDateTime dateTime, Integer estimateHrs, Integer estimateMin) {
+    public Appointment(Status status, Address serviceLocation, Services services, String serviceDescription, Agent agent ,Customer customer,LocalDate appointmentDate,LocalTime appointmentTime, Integer estimateHrs, Integer estimateMin) {
         this.status=status;
         this.serviceLocation=serviceLocation;
         this.services = services;
         this.serviceDescription=serviceDescription;
         this.agent = agent;
         this.customer = customer;
-        this.dateTime = dateTime;
+        this.appointmentTime = appointmentTime;
+        this.appointmentDate = appointmentDate;
         this.estimateHrs = estimateHrs;
         this.estimateMin = estimateMin;
     }
@@ -91,12 +95,20 @@ public class Appointment {
         this.customer = customer;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDate getAppointmentDate() {
+        return appointmentDate;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setAppointmentDate(LocalDate appointmentDate) {
+        this.appointmentDate = appointmentDate;
+    }
+
+    public LocalTime getAppointmentTime() {
+        return appointmentTime;
+    }
+
+    public void setAppointmentTime(LocalTime appointmentTime) {
+        this.appointmentTime = appointmentTime;
     }
 
     public Integer getEstimateHrs() {
@@ -107,18 +119,7 @@ public class Appointment {
         this.estimateHrs = estimateHrs;
     }
 
-    @Override
-    public String toString() {
-        return "Appointment{" +
-                "id=" + id +
-                ", service=" + services +
-                ", agent=" + agent +
-                ", customer=" + customer +
-                ", dateTime=" + dateTime +
-                ", estimateHrs=" + estimateHrs +
-                ", estimateMin=" + estimateMin +
-                '}';
-    }
+
 
     public Integer getEstimateMin() {
         return estimateMin;
