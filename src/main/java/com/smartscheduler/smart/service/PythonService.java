@@ -1,8 +1,11 @@
 package com.smartscheduler.smart.service;
 
 import com.smartscheduler.smart.model.Appointment;
+import com.smartscheduler.smart.model.Schedule;
+import com.smartscheduler.smart.model.ScheduleUnit;
 import com.smartscheduler.smart.model.Status;
 import com.smartscheduler.smart.repository.AppointmentRepository;
+import com.smartscheduler.smart.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.*;
@@ -14,11 +17,15 @@ public class PythonService {
 
     private final AppointmentService appointmentService;
     private final AppointmentRepository appointmentRepository;
+    private final  ScheduleService scheduleService;
+    private final ScheduleRepository scheduleRepository;
 
     @Autowired
-    public PythonService(AppointmentService appointmentService, AppointmentRepository appointmentRepository) {
+    public PythonService(AppointmentService appointmentService, ScheduleService scheduleService, AppointmentRepository appointmentRepository,ScheduleRepository scheduleRepository) {
         this.appointmentService = appointmentService;
+        this.scheduleService = scheduleService;
         this.appointmentRepository = appointmentRepository;
+        this.scheduleRepository=scheduleRepository;
     }
 
     public void optimizeAppointments(Integer agentId, Integer day, Integer month, Integer year) {
@@ -27,7 +34,9 @@ public class PythonService {
         String optimizedSchedule = runPythonScript(jsonAppointments);
         System.out.println("ccc");
         System.out.println(optimizedSchedule);
-
+        LocalTime newTime = null;
+        int serviceTime = 0;
+        Appointment appointment=new Appointment();
         JSONArray array = new JSONArray(optimizedSchedule);
         int totalTime=0;
         for(int i = 0; i < array.length(); i++) {
@@ -35,14 +44,14 @@ public class PythonService {
             long address_id = object.getLong("id");
             long travelTime = object.getLong("travelTime");
             long appointment_id = appointmentService.getAppointmentIdByAddressId(address_id);
-            Appointment appointment = appointmentService.findAppointmentById(appointment_id);
+            appointment = appointmentService.findAppointmentById(appointment_id);
 
             if(appointment != null) {
-                int serviceTime = appointment.getEstimateHrs() * 60 + appointment.getEstimateMin();
+                serviceTime = appointment.getEstimateHrs() * 60 + appointment.getEstimateMin();
                 long minutesToAdd = totalTime + travelTime;
                 totalTime += serviceTime;
-                LocalTime time = appointment.getAppointmentTime();
-                LocalTime newTime = time.plusMinutes(minutesToAdd);
+                LocalTime time = scheduleService.getScheduleAgentOnDate(agentId,day,month,year).getWorkSchedule().startTime;
+                newTime = time.plusMinutes(minutesToAdd);
                 appointment.setAppointmentTime(newTime);
                 appointment.setStatus(Status.SCHEDULED);
                 appointmentRepository.save(appointment);
@@ -50,6 +59,17 @@ public class PythonService {
                 System.out.println("No appointment found with id: " + appointment_id);
             }
         }
+        Schedule schedule=scheduleService.getScheduleAgentOnDate(agentId,day,month,year);
+        ScheduleUnit bookedSchedule=schedule.getBookedSchedule();
+        ScheduleUnit workSchedule=schedule.getWorkSchedule();
+        ScheduleUnit availableSchedule=schedule.getAvailableSchedule();
+
+        assert newTime != null;
+        bookedSchedule.setStartTime(workSchedule.startTime);
+        bookedSchedule.setEndTime(newTime.plusMinutes(serviceTime));
+        availableSchedule.setStartTime(bookedSchedule.endTime);
+
+        scheduleRepository.save(schedule);
     }
 
 

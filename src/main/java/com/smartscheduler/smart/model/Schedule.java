@@ -9,7 +9,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
-@Table
+@Table(
+        uniqueConstraints=
+        @UniqueConstraint(columnNames={"date", "agent_id"})
+)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Schedule {
     @Id

@@ -41,7 +41,6 @@ public class AppointmentConfig {
                 Appointment appoint4 = new Appointment(Status.PENDING, new Address("ss", "ss", "ss", "ss", 12), null, " ", agent2, null, LocalDate.of(2023, 10, 15), LocalTime.of(14, 10), 2, 2);
                 repository.saveAll(List.of(appoint4));
             } catch (IllegalArgumentException e) {
-                // Log the exception and handle it gracefully
                 System.out.println("Error: " + e.getMessage());
             }
         };
