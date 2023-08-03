@@ -39,7 +39,7 @@ public class ScheduleService {
         Agent agent = agentRepository.findById(agentId)
                 .orElseThrow(() -> new IllegalArgumentException("No agent with the provided ID exists"));
 
-        agent.getSchedules().add(schedule);
+//        agent.getSchedules().add(schedule);
         schedule.setAgent(agent);
         scheduleRepository.save(schedule);
 

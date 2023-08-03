@@ -9,14 +9,14 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Agent extends Person {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="start_address_id")
     private Address startAddress;
-    @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true)
 
-    private List<Schedule> schedules = new ArrayList<>();
+//    @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+//    private List<Schedule> schedules = new ArrayList<>();
 
     public Address getStartAddress() {
         return startAddress;
@@ -35,15 +35,15 @@ public class Agent extends Person {
     }
 
 //    getter and setter for schedules
-    public List<Schedule> getSchedules() {
-        return schedules;
-    }
-
-    public void setSchedules(List<Schedule> schedules) {
-        this.schedules = schedules;
-        for (Schedule schedule : schedules) {
-            schedule.setAgent(this);
-        }
-    }
+//    public List<Schedule> getSchedules() {
+//        return schedules;
+//    }
+//
+//    public void setSchedules(List<Schedule> schedules) {
+//        this.schedules = schedules;
+//        for (Schedule schedule : schedules) {
+//            schedule.setAgent(this);
+//        }
+//    }
 }
 

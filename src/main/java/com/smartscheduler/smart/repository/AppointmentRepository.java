@@ -14,8 +14,9 @@ import java.util.Optional;
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
     @Query("SELECT s FROM Appointment s WHERE s.id=1")
     Optional<Appointment> findAppointmentByEstimateHrs(int id);
-    @Query("SELECT  a FROM Appointment a WHERE MONTH(a.appointmentDate) = :month AND YEAR(a.appointmentDate) = COALESCE(:year, YEAR(CURRENT_DATE))")
-    List<Appointment> getAllAppointmentsByMonth(@Param("month") Integer month,@Param("year") Integer year);
+    @Query(value = "SELECT * FROM appointment a WHERE EXTRACT(MONTH FROM a.appointment_date) = :month AND EXTRACT(YEAR FROM a.appointment_date) = COALESCE(:year, EXTRACT(YEAR FROM CURRENT_DATE))", nativeQuery = true)
+    List<Appointment> getAllAppointmentsByMonth(@Param("month") Integer month, @Param("year") Integer year);
+
     @Query(value = "SELECT * FROM appointment as a WHERE a.agent_id = :agentId AND EXTRACT(DAY FROM a.appointment_date) = :day AND EXTRACT(MONTH FROM a.appointment_date) = :month AND EXTRACT(YEAR FROM a.appointment_date) = :year", nativeQuery = true)
     List<Appointment> getAllAppointmentsByAgentAndDate(@Param("agentId") Integer agentId,@Param("day")  Integer day,@Param("month")  Integer month,@Param("year")  Integer year);
 

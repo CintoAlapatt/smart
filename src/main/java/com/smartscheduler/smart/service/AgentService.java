@@ -4,6 +4,7 @@ import com.smartscheduler.smart.model.Agent;
 import com.smartscheduler.smart.repository.AgentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class AgentService {
     public AgentService(AgentRepository agentRepository) {
         this.agentRepository = agentRepository;
     }
-
+    @Transactional
     public List<Agent> getAllAgents(){
         return agentRepository.findAll();
     }
