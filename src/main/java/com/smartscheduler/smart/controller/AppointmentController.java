@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -24,15 +23,20 @@ public class AppointmentController {
 //    public List<Appointment> getAllAppointments() {
 //        return appointmentService.getAllAppointments();
 //    }
+
     @GetMapping()
     public List<Appointment> getAllAppointmentsByMonth(@RequestParam Integer month,@RequestParam(required = false) Integer year) {
         return appointmentService.getAllAppointmentsByMonth(month,year);
     }
-    @GetMapping("/agent")
-    public String getAllAppointmentsByAgentAndDate(@RequestParam Integer agentId,@RequestParam (required = false)Integer day,@RequestParam(required = false) Integer month,@RequestParam(required = false) Integer year) {
-        return appointmentService.getAllAppointmentsByAgentAndDate(agentId,day,month,year);
+    @GetMapping("/agent/address")
+    public String getAllAddressByAgentAndDate(@RequestParam Integer agentId,@RequestParam (required = false)Integer day,@RequestParam(required = false) Integer month,@RequestParam(required = false) Integer year) {
+        return appointmentService.getAllAddressByAgentAndDate(agentId,day,month,year);
     }
 
+    @GetMapping("/agent")
+    public List<Appointment> getAllAppointmentsByAgentAndDate(@RequestParam Integer agentId, @RequestParam (required = false)Integer day, @RequestParam(required = false) Integer month, @RequestParam(required = false) Integer year) {
+        return appointmentService.getAllAppointmentsByAgentAndDate(agentId,day,month,year);
+    }
 
 
     @PostMapping

@@ -29,7 +29,7 @@ public class PythonService {
     }
 
     public void optimizeAppointments(Integer agentId, Integer day, Integer month, Integer year) {
-        String jsonAppointments =appointmentService.getAllAppointmentsByAgentAndDate(agentId, day, month, year);
+        String jsonAppointments =appointmentService.getAllAddressByAgentAndDate(agentId, day, month, year);
         System.out.println(jsonAppointments);
         String optimizedSchedule = runPythonScript(jsonAppointments);
         System.out.println("ccc");

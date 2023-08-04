@@ -42,7 +42,7 @@ public class AppointmentService {
         return appointmentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No appointment found for the given id: " + id));
     }
-    public String getAllAppointmentsByAgentAndDate(Integer agentId, Integer day, Integer month, Integer year) {
+    public String getAllAddressByAgentAndDate(Integer agentId, Integer day, Integer month, Integer year) {
         if(day == null){
             day = LocalDate.now().getDayOfMonth();
         }
@@ -151,5 +151,25 @@ public class AppointmentService {
     }
 
 
+    public List<Appointment> getAllAppointmentsByAgentAndDate(Integer agentId, Integer day, Integer month, Integer year) {
+        if(day == null){
+            day = LocalDate.now().getDayOfMonth();
+        }
+        if(month == null){
+            month = LocalDate.now().getMonthValue();
+        }
+        if(year == null){
+            year = LocalDate.now().getYear();
+        }
 
+        Optional<Agent> agentOpt = agentRepository.findById(agentId);
+
+        if (!agentOpt.isPresent()) {
+            throw new NoSuchElementException("No agent found with the provided id");
+        }
+
+        Agent agent = agentOpt.get();
+        List<Appointment> appointments = appointmentRepository.getAllAppointmentsByAgentAndDate(agentId,day,month,year);
+        return appointments;
+    }
 }
